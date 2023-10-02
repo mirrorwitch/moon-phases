@@ -38,6 +38,7 @@ enum Mode {
     Name,
     Emoji,
     Numeric,
+    Zodiac
 }
 impl std::fmt::Display for Mode {
     // Display the name of the enum value in lowercase
@@ -54,7 +55,7 @@ impl std::fmt::Display for Mode {
           max_term_width=80,
           long_about = None )]
 struct Cli {
-    /// How to show the moon phase.
+    /// How to show the moon phase, or moon sign for "zodiac"
     #[arg(short, long, default_value_t=Mode::Name,)]
     mode: Mode,
 
@@ -65,6 +66,10 @@ struct Cli {
     /// Equivalent to --mode emoji
     #[arg(short, long)]
     emoji: bool,
+
+    /// Equivalent to --mode zodiac
+    #[arg(short, long)]
+    zodiac: bool,
 
     /// Use emojis direction for the Southern hemisphere (waxing crescent is 🌘)
     #[arg(short, long)]
@@ -159,6 +164,8 @@ fn main() {
         Mode::Numeric
     } else if cli.emoji {
         Mode::Emoji
+    } else if cli.zodiac {
+        Mode::Zodiac
     } else {
         cli.mode
     };
@@ -168,7 +175,7 @@ fn main() {
         match str_to_system_time(cli.date.unwrap().as_str()) {
             Ok(t) => { moontime = t;} 
             Err(_) => {
-                println!("Invalid date");
+                println!("Invalid date!");
                 std::process::exit(2);
             }
         }
@@ -180,7 +187,8 @@ fn main() {
 
     match mode {
         Mode::Numeric => println!("{:1.2}", moon.phase),
-        Mode::Name =>    println!("{}", moon.phase_name),
+        Mode::Name    => println!("{}", moon.phase_name),
+        Mode::Zodiac  => println!("{}", moon.zodiac_name),
         _ => {
             let emoji = to_emoji(moon.phase,
                                  cli.south_hemisphere,

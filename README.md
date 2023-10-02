@@ -2,7 +2,7 @@ moon-phases
 ===========
 
 Command-line application to show the moon phase for a given date and time, as a
-text string, emoji, or numeric value.
+text string, emoji, or numeric value.  It can also show the moon sign.
 
 Designed to be fast, for use in window manager bars, shell prompts and the like.
 (On a raspberry pi 4, latency has been under 10ms for all modes; on a modern
@@ -23,7 +23,6 @@ monochrome text.  See `--help` for documentation.
 TODO
 ====
 
- - Zodiac moon phase
  - Cartoon face emojis
  - Calendar display
  - Translations for moon phase names
