@@ -13,24 +13,44 @@ const VS15: &str = "\u{fe0e}"; // text emoji
 const VS16: &str = "\u{fe0f}"; // color emoji
 
 const NORTH_EMOJI: [&str; 8] = [
-        "🌑",
-        "🌒",
-        "🌓",
-        "🌔",
-        "🌕",
-        "🌖",
-        "🌗",
-        "🌘",
+    "🌑",
+    "🌒",
+    "🌓",
+    "🌔",
+    "🌕",
+    "🌖",
+    "🌗",
+    "🌘",
 ];
 const SOUTH_EMOJI: [&str; 8] = [
-        "🌑",
-        "🌘",
-        "🌗",
-        "🌖",
-        "🌕",
-        "🌔",
-        "🌓",
-        "🌒",
+    "🌑",
+    "🌘",
+    "🌗",
+    "🌖",
+    "🌕",
+    "🌔",
+    "🌓",
+    "🌒",
+];
+const NORTH_EMOJI_FACE: [&str; 8] = [
+    "🌚",
+    "🌚",
+    "🌛",
+    "🌛",
+    "🌝",
+    "🌝",
+    "🌜",
+    "🌜",
+];
+const SOUTH_EMOJI_FACE: [&str; 8] = [
+    "🌚",
+    "🌚",
+    "🌜",
+    "🌜",
+    "🌝",
+    "🌝",
+    "🌛",
+    "🌛",
 ];
 
 #[derive(clap::ValueEnum, Clone, Debug)]
@@ -83,6 +103,10 @@ struct Cli {
     #[arg(short, long)]
     text_emoji: bool,
 
+    /// Use cartoon face moon emojis (reduce distinct phases from 8 to 4)
+    #[arg(short, long)]
+    face_emoji: bool,
+
 
     /// Date with optional time to query the moon phase
     /// (e.g. "2023-10-31", "2023-10-31 23:59:59", "Friday").
@@ -127,11 +151,16 @@ fn str_to_system_time(timestr: &str) -> Result<SystemTime, &'static str> {
 
 fn to_emoji(phase: f64,
             south_hemisphere: bool, 
+            face: bool,
             color_emoji: bool,
             text_emoji: bool)
     -> String {
-        let hemisphere_emoji = if south_hemisphere {
+        let emoji_set = if south_hemisphere && face {
+            SOUTH_EMOJI_FACE
+        } else if south_hemisphere {
             SOUTH_EMOJI
+        } else if face {
+            NORTH_EMOJI_FACE
         } else {
             NORTH_EMOJI
         };
@@ -143,15 +172,15 @@ fn to_emoji(phase: f64,
             ""
         };
         let emoji = match phase {
-            x if x <  0.125 => hemisphere_emoji[0],
-            x if x <  0.25  => hemisphere_emoji[1],
-            x if x <  0.375 => hemisphere_emoji[2],
-            x if x <  0.50  => hemisphere_emoji[3],
-            x if x <  0.625 => hemisphere_emoji[4],
-            x if x <  0.75  => hemisphere_emoji[5],
-            x if x <  0.875 => hemisphere_emoji[6],
-            x if x <  1.00  => hemisphere_emoji[7],
-            _ => hemisphere_emoji[0]
+            x if x <  0.125 => emoji_set[0],
+            x if x <  0.25  => emoji_set[1],
+            x if x <  0.375 => emoji_set[2],
+            x if x <  0.50  => emoji_set[3],
+            x if x <  0.625 => emoji_set[4],
+            x if x <  0.75  => emoji_set[5],
+            x if x <  0.875 => emoji_set[6],
+            x if x <  1.00  => emoji_set[7],
+            _ => emoji_set[0]
         };
 
         format!("{}{}", emoji, vs)
@@ -192,6 +221,7 @@ fn main() {
         _ => {
             let emoji = to_emoji(moon.phase,
                                  cli.south_hemisphere,
+                                 cli.face_emoji,
                                  cli.color_emoji,
                                  cli.text_emoji);
 
