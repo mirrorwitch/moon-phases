@@ -11,6 +11,11 @@ use human_date_parser::from_human_time;
 // If no VS is present it's up to the system how to display the emojis.
 const VS15: &str = "\u{fe0e}"; // text emoji
 const VS16: &str = "\u{fe0f}"; // color emoji
+enum EmojiVariation {
+    Unspecified,
+    Text,
+    Colour,
+}
 
 const NORTH_EMOJI: [&str; 8] = [
     "🌑",
@@ -52,6 +57,7 @@ const SOUTH_EMOJI_FACE: [&str; 8] = [
     "🌛",
     "🌛",
 ];
+
 
 #[derive(clap::ValueEnum, Clone, Debug)]
 enum Mode {
@@ -102,7 +108,7 @@ struct Cli {
     #[arg(short, long)]
     south_hemisphere: bool,
 
-    /// Use variation selectors to prefer colour emoji (support depends on terminal)
+    /// Use variation selectors to prefer colour emoji (support depends on fonts/terminal)
     #[arg(short, long, group="vs")]
     color_emoji: bool,
 
@@ -158,14 +164,11 @@ fn str_to_system_time(timestr: &str) -> Result<SystemTime, &'static str> {
     }
 }
 
-fn emoji_with_vs(one_emoji_char: &str,
-                 color_emoji: bool, text_emoji: bool) -> String {
-        let vs = if color_emoji {
-            VS16
-        } else if text_emoji {
-            VS15
-        } else {
-            ""
+fn emoji_with_vs(one_emoji_char: &str, vari: EmojiVariation) -> String {
+        let vs = match vari {
+            EmojiVariation::Text => VS15,
+            EmojiVariation::Colour => VS16,
+            EmojiVariation::Unspecified => ""
         };
         format!("{}{}", one_emoji_char, vs)
 }
@@ -173,8 +176,7 @@ fn emoji_with_vs(one_emoji_char: &str,
 fn to_emoji(phase: f64,
             south_hemisphere: bool, 
             face: bool,
-            color_emoji: bool,
-            text_emoji: bool)
+            vari: EmojiVariation)
     -> String {
         let emoji_set = if south_hemisphere && face {
             SOUTH_EMOJI_FACE
@@ -197,7 +199,7 @@ fn to_emoji(phase: f64,
             _ => emoji_set[0]
         };
 
-        emoji_with_vs(emoji, color_emoji, text_emoji)
+        emoji_with_vs(emoji, vari)
 }
 
 fn main() {
@@ -214,6 +216,15 @@ fn main() {
         Mode::Emoji
     } else {
         cli.mode // default is Mode::Name
+    };
+
+    let emoji_variation = match mode {
+        Mode::Emoji => {
+            if cli.text_emoji { EmojiVariation::Text }
+            else if cli.color_emoji { EmojiVariation::Colour }
+            else { EmojiVariation::Unspecified }
+        },
+        _ => EmojiVariation::Unspecified
     };
 
     let moontime: SystemTime;
@@ -271,7 +282,7 @@ fn main() {
                         _ => "⛎",
                     }
                 };
-				println!("{}", emoji_with_vs(emoji, cli.color_emoji, cli.text_emoji));
+				println!("{}", emoji_with_vs(emoji, emoji_variation));
             },
         };
     } else {
@@ -282,8 +293,7 @@ fn main() {
                 let emoji = to_emoji(moon.phase,
                                      cli.south_hemisphere,
                                      cli.face_emoji,
-                                     cli.color_emoji,
-                                     cli.text_emoji);
+                                     emoji_variation);
 
                 println!("{}", emoji);
             }
