@@ -75,17 +75,23 @@ impl std::fmt::Display for Mode {
           long_about = None )]
 struct Cli {
     /// Format in which to display the moon phase or moon sign.
-    #[arg(short, long, default_value_t=Mode::Name,)]
+    #[arg(short, long, default_value_t=Mode::Name,group="themode")]
     mode: Mode,
+
+    // unnecessary, but I keep calling this option reflexively, by analogy:
+
+    /// Equivalent to --mode name.
+    #[arg(long, group="themode")]
+    name: bool,
 
     /// Equivalent to --mode numeric.
     ///
     /// For --zodiac, show the ecliptic longitude from 0 to 360° decimal.
-    #[arg(short, long)]
+    #[arg(short, long, group="themode")]
     numeric: bool,
 
     /// Equivalent to --mode emoji
-    #[arg(short, long)]
+    #[arg(short, long, group="themode")]
     emoji: bool,
 
     /// Instead of displaying the moon phase, show the lunar zodiac sign.
@@ -97,11 +103,11 @@ struct Cli {
     south_hemisphere: bool,
 
     /// Use variation selectors to prefer colour emoji (support depends on terminal)
-    #[arg(short, long)]
+    #[arg(short, long, group="vs")]
     color_emoji: bool,
 
     /// Use variation selectors to prefer text emoji (monochrome)
-    #[arg(short, long)]
+    #[arg(short, long, group="vs")]
     text_emoji: bool,
 
     /// Use cartoon face moon emojis (reduce distinct phases from 8 to 4).
