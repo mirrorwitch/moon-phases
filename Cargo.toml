@@ -1,0 +1,15 @@
+[package]
+name = "moon-phases"
+description = "Fast command-line application to show the moon phase"
+version = "0.1.0"
+edition = "2021"
+authors = ["mirrorwitch", "wonder&"]
+license-file = "LICENSE"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+clap = { version = "4.4.6", features = ["derive", "wrap_help"] }
+moon-phase = "0.1.0"
+chrono = "0.4.31"
+human-date-parser = "0.1.1"
