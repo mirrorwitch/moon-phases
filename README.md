@@ -27,11 +27,11 @@ $ moon-phases
 Waning Gibbous
 $ moon-phases 2023-10-31
 Full
-$ moon-phases --emoji
+$ moon-phases --emoji  # color or monochrome left for system to decide
 🌕
-$ moon-phases --emoji --text-emoji # displays as monochrome in browsers etc.
+$ moon-phases --text-emoji # displays as monochrome in browsers etc.
 🌕︎
-$ moon-phases --emoji --face-emoji "in 7 days"
+$ moon-phases --face-emoji "in 7 days"
 🌜
 $ moon-phases --numeric
 0.60
