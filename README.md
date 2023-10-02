@@ -31,8 +31,8 @@ $ moon-phases --emoji
 🌕
 $ moon-phases --emoji --text-emoji # displays as monochrome in browsers etc.
 🌕︎
-$ moon-phases --emoji --face
-🌝
+$ moon-phases --emoji --face-emoji "in 7 days"
+🌜
 $ moon-phases --numeric
 0.60
 $ moon-phases --numeric "next Friday"
