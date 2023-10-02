@@ -58,7 +58,6 @@ enum Mode {
     Name,
     Emoji,
     Numeric,
-    Zodiac
 }
 impl std::fmt::Display for Mode {
     // Display the name of the enum value in lowercase
@@ -75,7 +74,7 @@ impl std::fmt::Display for Mode {
           max_term_width=80,
           long_about = None )]
 struct Cli {
-    /// How to show the moon phase, or moon sign for "zodiac"
+    /// Format in which to display the moon phase.
     #[arg(short, long, default_value_t=Mode::Name,)]
     mode: Mode,
 
@@ -87,7 +86,7 @@ struct Cli {
     #[arg(short, long)]
     emoji: bool,
 
-    /// Equivalent to --mode zodiac
+    /// Instead of displaying the moon phase, show the lunar zodiac sign.
     #[arg(short, long)]
     zodiac: bool,
 
@@ -110,7 +109,7 @@ struct Cli {
 
     /// Date with optional time to query the moon phase
     /// (e.g. "2023-10-31", "2023-10-31 23:59:59", "Friday").
-    /// By default, shows the current date and time.
+    /// By default, show the current date and time.
     date: Option<String>,
 
 }
@@ -189,12 +188,10 @@ fn to_emoji(phase: f64,
 fn main() {
     let cli = Cli::parse();
 
-    let mode: Mode = if cli.numeric {
+    let mode = if cli.numeric {
         Mode::Numeric
     } else if cli.emoji {
         Mode::Emoji
-    } else if cli.zodiac {
-        Mode::Zodiac
     } else {
         cli.mode
     };
@@ -214,18 +211,31 @@ fn main() {
 
     let moon = MoonPhase::new(moontime);
 
-    match mode {
-        Mode::Numeric => println!("{:1.2}", moon.phase),
-        Mode::Name    => println!("{}", moon.phase_name),
-        Mode::Zodiac  => println!("{}", moon.zodiac_name),
-        _ => {
-            let emoji = to_emoji(moon.phase,
-                                 cli.south_hemisphere,
-                                 cli.face_emoji,
-                                 cli.color_emoji,
-                                 cli.text_emoji);
+    if cli.zodiac {
+        match mode {
+            Mode::Name  => println!("{}", moon.zodiac_name),
+            Mode::Numeric => {
+                println!("Error: Numeric zodiac transit not implemented!");
+                std::process::exit(3);
+            },
+            Mode::Emoji => {
+                println!("Error: Zodiac emoji not implemented!");
+                std::process::exit(3);
+            },
+        };
+    } else {
+        match mode {
+            Mode::Numeric => println!("{:1.2}", moon.phase),
+            Mode::Name    => println!("{}", moon.phase_name),
+            Mode::Emoji => {
+                let emoji = to_emoji(moon.phase,
+                                     cli.south_hemisphere,
+                                     cli.face_emoji,
+                                     cli.color_emoji,
+                                     cli.text_emoji);
 
-            println!("{}", emoji);
+                println!("{}", emoji);
+            }
         }
     }
 }
