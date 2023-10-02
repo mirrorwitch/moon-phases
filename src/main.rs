@@ -148,6 +148,18 @@ fn str_to_system_time(timestr: &str) -> Result<SystemTime, &'static str> {
     }
 }
 
+fn emoji_with_vs(one_emoji_char: &str,
+                 color_emoji: bool, text_emoji: bool) -> String {
+        let vs = if color_emoji {
+            VS16
+        } else if text_emoji {
+            VS15
+        } else {
+            ""
+        };
+        format!("{}{}", one_emoji_char, vs)
+}
+
 fn to_emoji(phase: f64,
             south_hemisphere: bool, 
             face: bool,
@@ -163,13 +175,6 @@ fn to_emoji(phase: f64,
         } else {
             NORTH_EMOJI
         };
-        let vs = if color_emoji {
-            VS16
-        } else if text_emoji {
-            VS15
-        } else {
-            ""
-        };
         let emoji = match phase {
             x if x <  0.125 => emoji_set[0],
             x if x <  0.25  => emoji_set[1],
@@ -182,7 +187,7 @@ fn to_emoji(phase: f64,
             _ => emoji_set[0]
         };
 
-        format!("{}{}", emoji, vs)
+        emoji_with_vs(emoji, color_emoji, text_emoji)
 }
 
 fn main() {
@@ -219,8 +224,22 @@ fn main() {
                 std::process::exit(3);
             },
             Mode::Emoji => {
-                println!("Error: Zodiac emoji not implemented!");
-                std::process::exit(3);
+                let emoji = match moon.zodiac_name {
+					"Pisces"=> "♓",
+					"Aries"=> "♈",
+					"Taurus"=> "♉",
+					"Gemini"=> "♊",
+					"Cancer"=> "♋",
+					"Leo"=> "♌",
+					"Virgo"=> "♍",
+					"Libra"=> "♎",
+					"Scorpio"=> "♏",
+					"Sagittarius"=> "♐",
+					"Capricorn"=> "♑",
+					"Aquarius"=> "♒",
+					_ => "⛎",
+				};
+				println!("{}", emoji_with_vs(emoji, cli.color_emoji, cli.text_emoji));
             },
         };
     } else {
