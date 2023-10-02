@@ -1,9 +1,3 @@
-// TODO:
-// - documentation/meta
-// - emojis with faces option
-// - print calendar dates of nominal moon phases
-// - undertime's moonphase option parity
-
 use clap::Parser;
 use std::fmt;
 use moon_phase::MoonPhase;
@@ -15,9 +9,6 @@ use human_date_parser::from_human_time;
 // emoji show in text- or color presentation.
 //
 // If no VS is present it's up to the system how to display the emojis.
-//
-// TODO: document that results in terminal depend on terminal's support of color emoji.
-
 const VS15: &str = "\u{fe0e}"; // text emoji
 const VS16: &str = "\u{fe0f}"; // color emoji
 
@@ -131,7 +122,6 @@ fn str_to_system_time(timestr: &str) -> Result<SystemTime, &'static str> {
 
 fn to_emoji(phase: f64,
             south_hemisphere: bool, 
-            // TODO: enum
             color_emoji: bool,
             text_emoji: bool)
     -> String {
