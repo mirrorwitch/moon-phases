@@ -23,6 +23,7 @@ monochrome text.  See `--help` for documentation.
 TODO
 ====
 
+ - Make exclusive options exclusive
  - Cartoon face emojis
  - Calendar display
  - Translations for moon phase names
