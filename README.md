@@ -26,3 +26,10 @@ TODO
  - Cartoon face emojis
  - Calendar display
  - Translations for moon phase names
+
+BUGS
+====
+
+Panicking when passed dates out of range rather than gracefully exiting
+(reported to human-date-parser
+https://github.com/technologicalMayhem/human-date-parser/issues/1 )
