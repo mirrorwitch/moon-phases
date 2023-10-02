@@ -20,6 +20,29 @@ Accepts dates in any format from crate `human-date-parser`, such as:
 Includes an option to set Unicode variation characters for colour emoji or
 monochrome text.  See `--help` for documentation.
 
+Examples
+========
+```sh
+$ moon-phases
+Waning Gibbous
+$ moon-phases 2023-10-31
+Full
+$ moon-phases --emoji
+🌕
+$ moon-phases --emoji --text-emoji # displays as monochrome in browsers etc.
+🌕︎
+$ moon-phases --emoji --face
+🌝
+$ moon-phases --numeric
+0.60
+$ moon-phases --numeric "next Friday"
+0.94
+$ moon-phases --zodiac
+Taurus
+$ moon-phases --zodiac --emoji
+♉
+```
+
 TODO
 ====
 
