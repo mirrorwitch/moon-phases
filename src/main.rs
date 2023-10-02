@@ -207,8 +207,13 @@ fn main() {
         Mode::Numeric
     } else if cli.emoji {
         Mode::Emoji
+    } else if cli.name {
+        Mode::Name
+    } else if cli.face_emoji || cli.color_emoji || cli.text_emoji {
+        // if user is setting emoji options, it implies they want emoji mode.
+        Mode::Emoji
     } else {
-        cli.mode
+        cli.mode // default is Mode::Name
     };
 
     let moontime: SystemTime;

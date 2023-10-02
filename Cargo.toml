@@ -1,7 +1,7 @@
 [package]
 name = "moon-phases"
 description = "Fast command-line application to show the moon phase"
-version = "0.3.1"
+version = "0.3.2"
 edition = "2021"
 authors = ["mirrorwitch", "wonder&"]
 repository = "https://github.com/mirrorwitch/moon-phases"
