@@ -224,21 +224,39 @@ fn main() {
                 std::process::exit(3);
             },
             Mode::Emoji => {
-                let emoji = match moon.zodiac_name {
-					"Pisces"=> "♓",
-					"Aries"=> "♈",
-					"Taurus"=> "♉",
-					"Gemini"=> "♊",
-					"Cancer"=> "♋",
-					"Leo"=> "♌",
-					"Virgo"=> "♍",
-					"Libra"=> "♎",
-					"Scorpio"=> "♏",
-					"Sagittarius"=> "♐",
-					"Capricorn"=> "♑",
-					"Aquarius"=> "♒",
-					_ => "⛎",
-				};
+                let emoji = if cli.face_emoji {
+                    match moon.zodiac_name {
+                        "Pisces"=> "🐟",
+                        "Aries"=> "🐏",
+                        "Taurus"=> "🐂",
+                        "Gemini"=> "👯",
+                        "Cancer"=> "🦀",
+                        "Leo"=> "🦁",
+                        "Virgo"=> "👧",
+                        "Libra"=> "⚖️",
+                        "Scorpio"=> "🦂",
+                        "Sagittarius"=> "🏹",
+                        "Capricorn"=> "🐐",
+                        "Aquarius"=> "🏺",
+                        _ => "🐍",
+                    }
+                } else {
+                    match moon.zodiac_name {
+                        "Pisces"=> "♓",
+                        "Aries"=> "♈",
+                        "Taurus"=> "♉",
+                        "Gemini"=> "♊",
+                        "Cancer"=> "♋",
+                        "Leo"=> "♌",
+                        "Virgo"=> "♍",
+                        "Libra"=> "♎",
+                        "Scorpio"=> "♏",
+                        "Sagittarius"=> "♐",
+                        "Capricorn"=> "♑",
+                        "Aquarius"=> "♒",
+                        _ => "⛎",
+                    }
+                };
 				println!("{}", emoji_with_vs(emoji, cli.color_emoji, cli.text_emoji));
             },
         };
