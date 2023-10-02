@@ -74,11 +74,13 @@ impl std::fmt::Display for Mode {
           max_term_width=80,
           long_about = None )]
 struct Cli {
-    /// Format in which to display the moon phase.
+    /// Format in which to display the moon phase or moon sign.
     #[arg(short, long, default_value_t=Mode::Name,)]
     mode: Mode,
 
-    /// Equivalent to --mode numeric
+    /// Equivalent to --mode numeric.
+    ///
+    /// For --zodiac, show the ecliptic longitude from 0 to 360° decimal.
     #[arg(short, long)]
     numeric: bool,
 
@@ -102,7 +104,9 @@ struct Cli {
     #[arg(short, long)]
     text_emoji: bool,
 
-    /// Use cartoon face moon emojis (reduce distinct phases from 8 to 4)
+    /// Use cartoon face moon emojis (reduce distinct phases from 8 to 4).
+    ///
+    /// For zodiac signs, use cartoon animals and fun symbols.
     #[arg(short, long)]
     face_emoji: bool,
 
@@ -220,8 +224,7 @@ fn main() {
         match mode {
             Mode::Name  => println!("{}", moon.zodiac_name),
             Mode::Numeric => {
-                println!("Error: Numeric zodiac transit not implemented!");
-                std::process::exit(3);
+                println!("{:1.2}", moon.longitude);
             },
             Mode::Emoji => {
                 let emoji = if cli.face_emoji {
